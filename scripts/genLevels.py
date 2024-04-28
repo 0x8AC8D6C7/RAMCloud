@@ -93,7 +93,7 @@ levels = {}
 # Read in WireFormat.h to get a list of valid RPC names and their opcodes.
 foundEnum = False
 foundEnd = False
-for line in open("src/WireFormat.h"):
+for line in open("../src/WireFormat.h"):
     # Strip newline
     line = line[0:-1]
 
