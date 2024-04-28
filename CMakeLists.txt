@@ -51,6 +51,8 @@ add_library(RAMCloud STATIC
     src/HomaTransport.cc
     src/IpAddress.cc
     src/IndexKey.cc
+    src/Infiniband.cc
+    src/InfRcTransport.cc
     src/Key.cc
     src/Logger.cc
     src/LogProtector.cc
@@ -94,3 +96,10 @@ add_executable(TcpTransportTest
     src/TestLog.cc)
 
 target_link_libraries(TcpTransportTest PRIVATE  gtest gtest_main  RAMCloud protobuf ${PCRECPP_LIBRARIES} )
+
+add_executable(InfRcTransportTest 
+    src/InfRcTransportTest.cc
+    src/TestUtil.cc
+    src/TestLog.cc)
+
+target_link_libraries(InfRcTransportTest PRIVATE  gtest gtest_main  RAMCloud protobuf ${PCRECPP_LIBRARIES} ibverbs)
