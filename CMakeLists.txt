@@ -11,7 +11,6 @@ add_subdirectory(/usr/src/gtest ${CMAKE_BINARY_DIR}/gtest)
 
 # 包括gtest的头文件
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-include_directories(src)
 # find_package(Boost 1.53.0 REQUIRED COMPONENTS system thread)
 
 # if(Boost_FOUND)
@@ -22,12 +21,16 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PCRECPP REQUIRED libpcrecpp)
 include_directories(${PCRECPP_INCLUDE_DIRS})
 
+include_directories(src)
 include_directories(src/protoGen)
 
-add_library(RAMCloud
-    src/protoGen/MetricList.pb.cc
-    src/protoGen/SpinLockStatistics.pb.cc
-    src/protoGen/TableConfig.pb.cc
+file(GLOB RAMCLOUD_PROTOGEN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/protoGen/*.cc")
+
+# proto生成的文件单独一个库，减少二次编译时间
+add_library(RAMCloud_protoGen STATIC ${RAMCLOUD_PROTOGEN_SOURCES})
+
+
+add_library(RAMCloud STATIC
     src/BasicTransport.cc
     src/Buffer.cc
     src/CacheTrace.cc
@@ -79,6 +82,7 @@ add_library(RAMCloud
     src/WorkerTimer.cc
     src/WireFormat.cc)
 
+target_link_libraries(RAMCloud PUBLIC RAMCloud_protoGen)
 
 
 # target_link_libraries(server profiler ibverbs ${PCRECPP_LIBRARIES} Boost::system Boost::thread )
